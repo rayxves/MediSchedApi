@@ -1,0 +1,46 @@
+# Ignore build outputs
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS for Mac
+.vscode/
+
+*.cab
+*.msi
+*.msm
+*.msp
+
+ScaffoldingReadMe.txt
+
+
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+
+.env
+secrets/
+
+*.mdf
+*.ldf
+
+*.log
+
+wwwroot/
+
+*.bak
+*.swp
+
+
+Dockerfile
+compose.yml
