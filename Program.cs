@@ -1,5 +1,7 @@
 using MediSchedApi.Data;
+using MediSchedApi.Interfaces;
 using MediSchedApi.Models;
+using MediSchedApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -72,24 +74,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("PacienteOnly", policy => policy.RequireRole("Paciente"));
+     options.AddPolicy("MedicoOnly", policy => policy.RequireRole("Medico"));
+});
+
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    var roles = new List<string> { "Admin", "Medico", "Paciente" };
-    foreach (var role in roles)
-    {
-        var roleExist = await roleManager.RoleExistsAsync(role);
-        if (!roleExist)
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-}
 
 if (app.Environment.IsDevelopment())
 {
@@ -103,7 +99,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 
 app.Run();

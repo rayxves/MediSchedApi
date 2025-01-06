@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -9,25 +10,19 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediSchedApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddConsulationAndConsulationReport : Migration
+    public partial class AddRolesAndFixSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "IdentityRole",
-                keyColumn: "Id",
-                keyValue: "45f47d42-68e0-4710-a311-289334ac8d77");
+            migrationBuilder.DropTable(
+                name: "IdentityRole");
 
-            migrationBuilder.DeleteData(
-                table: "IdentityRole",
-                keyColumn: "Id",
-                keyValue: "8655d349-f068-4c6a-9309-ee03979b1fb5");
-
-            migrationBuilder.DeleteData(
-                table: "IdentityRole",
-                keyColumn: "Id",
-                keyValue: "94a85b8b-27e1-4b66-a927-fb3fca47e148");
+            migrationBuilder.AddColumn<List<string>>(
+                name: "Keywords",
+                table: "Specialties",
+                type: "text[]",
+                nullable: false);
 
             migrationBuilder.CreateTable(
                 name: "ConsulationReports",
@@ -80,13 +75,30 @@ namespace MediSchedApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "IdentityRole",
+                table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1a6261b5-80b8-4041-995e-a4a69a8c8e35", null, "Médico", "MEDICO" },
-                    { "4fb0bfe0-d227-44f3-a7fd-c3a2b6455fc2", null, "Adm", "ADM" },
-                    { "6fef74b5-5060-4d88-bc41-52c757d70110", null, "Paciente", "PACIENTE" }
+                    { "7433da68-7212-4115-96b3-d6927c2a02a6", null, "Adm", "ADM" },
+                    { "a9a8429a-2a6c-4aad-9027-8d9c9be30e33", null, "Paciente", "PACIENTE" },
+                    { "b1b93a23-142f-458e-ad85-b6784851cba5", null, "Médico", "MEDICO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Specialties",
+                columns: new[] { "Id", "Keywords", "Name" },
+                values: new object[,]
+                {
+                    { 1, new List<string> { "pressão alta", "dor no peito", "coração", "infarto", "cardíaco" }, "Cardiologia" },
+                    { 2, new List<string> { "criança", "vacinas", "crescimento", "doenças infantis", "pediátrico" }, "Pediatria" },
+                    { 3, new List<string> { "pele", "acne", "erupções cutâneas", "cabelos", "unhas" }, "Dermatologia" },
+                    { 4, new List<string> { "dor de cabeça", "nervos", "convulsão", "neurológico", "esclerose múltipla" }, "Neurologia" },
+                    { 5, new List<string> { "saúde da mulher", "gestação", "ciclo menstrual", "anticoncepcional", "exames ginecológicos" }, "Ginecologia" },
+                    { 6, new List<string> { "olhos", "vista", "lentes", "miopia", "astigmatismo", "cirurgia ocular" }, "Oftalmologia" },
+                    { 7, new List<string> { "ossos", "fraturas", "coluna", "artrose", "músculos", "cirurgia ortopédica" }, "Ortopedia" },
+                    { 8, new List<string> { "saúde mental", "depressão", "ansiedade", "transtornos mentais", "psicoterapia" }, "Psiquiatria" },
+                    { 9, new List<string> { "idoso", "envelhecimento", "demência", "Alzheimer", "saúde do idoso" }, "Geriatria" },
+                    { 10, new List<string> { "ouvido", "nariz", "garganta", "sinusite", "amigdalite", "cirurgia otorrinolaringológica" }, "Otolaringologia" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -115,19 +127,87 @@ namespace MediSchedApi.Migrations
                 name: "Consultations");
 
             migrationBuilder.DeleteData(
-                table: "IdentityRole",
+                table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "1a6261b5-80b8-4041-995e-a4a69a8c8e35");
+                keyValue: "7433da68-7212-4115-96b3-d6927c2a02a6");
 
             migrationBuilder.DeleteData(
-                table: "IdentityRole",
+                table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "4fb0bfe0-d227-44f3-a7fd-c3a2b6455fc2");
+                keyValue: "a9a8429a-2a6c-4aad-9027-8d9c9be30e33");
 
             migrationBuilder.DeleteData(
-                table: "IdentityRole",
+                table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "6fef74b5-5060-4d88-bc41-52c757d70110");
+                keyValue: "b1b93a23-142f-458e-ad85-b6784851cba5");
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 8);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 9);
+
+            migrationBuilder.DeleteData(
+                table: "Specialties",
+                keyColumn: "Id",
+                keyValue: 10);
+
+            migrationBuilder.DropColumn(
+                name: "Keywords",
+                table: "Specialties");
+
+            migrationBuilder.CreateTable(
+                name: "IdentityRole",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    NormalizedName = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
+                });
 
             migrationBuilder.InsertData(
                 table: "IdentityRole",

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MediSchedApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediSchedApi.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250106182243_RemovingRoleInUser")]
+    partial class RemovingRoleInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,19 +139,19 @@ namespace MediSchedApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b4f3975-d8dd-4989-aa3e-3e5932cb773e",
+                            Id = "1b82d889-0c6c-4d7e-875b-dd7db71f1a72",
                             Name = "Adm",
                             NormalizedName = "ADM"
                         },
                         new
                         {
-                            Id = "70c7abdf-02dc-4254-a9f7-dc05632d308e",
+                            Id = "d5ebd04b-e26f-41b8-b1aa-f1dcc1bf4522",
                             Name = "Medico",
                             NormalizedName = "MEDICO"
                         },
                         new
                         {
-                            Id = "047a6f5c-5327-4618-a422-3ebd0a91bce9",
+                            Id = "50b2f2d3-bfeb-4789-84f9-c67d106291e8",
                             Name = "Paciente",
                             NormalizedName = "PACIENTE"
                         });
