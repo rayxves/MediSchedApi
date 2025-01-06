@@ -9,6 +9,7 @@ namespace MediSchedApi.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string MedicoId { get; set; }
+        public User Medico { get; set; }  
         public string Status { get; set; } = string.Empty;
         public int ConsultationCount { get; set; }
         public DateTime ReportDate { get; set; }
