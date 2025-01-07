@@ -1,3 +1,4 @@
+
 using MediSchedApi.Models;
 
 namespace MediSchedApi.Interfaces
