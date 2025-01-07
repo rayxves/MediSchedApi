@@ -1,44 +1,45 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MediSchedApi.Interfaces;
-using MediSchedApi.Models;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.IdentityModel.Tokens;
+using MediSchedApi.Models;
+using MediSchedApi.Interfaces;
 
 namespace MediSchedApi.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _configuration;
-        public TokenService(IConfiguration configuration)
+        private readonly IConfiguration _config;
+        private readonly SymmetricSecurityKey _key;
+
+
+        public TokenService(IConfiguration config)
         {
-            _configuration = configuration;
-         
+
+            _config = config;
+            _key = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(_config["JWT:SigningKey"]));
         }
+
+
         public string CreateToken(User user)
         {
-            var secretKey = _configuration["JWT:SigningKey"];
-            var issuer = _configuration["JwtSettings:Issuer"];
-            var audience = _configuration["JwtSettings:Audience"];
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, "Adm")
+        };
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-
-            int expiresInMinutes = 120;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
+                issuer: _config["JWT:Issuer"],
+                audience: _config["JWT:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expiresInMinutes),
-                signingCredentials: credentials
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
