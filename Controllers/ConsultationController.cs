@@ -12,10 +12,12 @@ namespace MediSchedApi.Controllers
     public class ConsultationController : ControllerBase
     {
         private readonly IConsultationRepository _consultationRepo;
+        private readonly IDoctorSpeciality _doctorSpeciality;
 
-        public ConsultationController(IConsultationRepository consultationRepo)
+        public ConsultationController(IConsultationRepository consultationRepo, IDoctorSpeciality doctorSpeciality)
         {
             _consultationRepo = consultationRepo;
+            _doctorSpeciality = doctorSpeciality;
         }
 
         [Authorize(Roles = "Paciente")]
@@ -48,11 +50,12 @@ namespace MediSchedApi.Controllers
             {
                 consulationDate = DateTime.SpecifyKind(consulationDate, DateTimeKind.Utc);
             }
-            var doctorsSpecialty = await _consultationRepo.GetDoctorSpecialtyBySymptom(symptoms);
+            var doctorsSpecialty = await _doctorSpeciality.GetDoctorSpecialtyBySymptom(symptoms);
 
-            if (doctorsSpecialty == null)
+            if (!doctorsSpecialty.Any())
             {
-                return NotFound("Nenhum médico correspondente à especialidade foi encontrado.");
+                doctorsSpecialty = await _doctorSpeciality.GetAllDoctorSpecialtyGeral();
+
             }
 
             var consulationAtThisTime = await _consultationRepo.GetConsultationByDate(consulationDate);
@@ -117,7 +120,7 @@ namespace MediSchedApi.Controllers
             if (consultation.Data < DateTime.UtcNow)
             {
                 return BadRequest("Não é possível cancelar uma consulta que já ocorreu.");
-            } 
+            }
 
             await _consultationRepo.DeleteConsultationAsync(consultation);
             return NoContent();

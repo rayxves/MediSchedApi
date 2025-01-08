@@ -118,6 +118,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
 builder.Services.AddScoped<IObserver, Observer>();
 builder.Services.AddScoped<ISubject, ConsultationNotifier>();
+builder.Services.AddScoped<IDoctorSpeciality, DoctorSpecialtyRepository>();
 
 var app = builder.Build();
 

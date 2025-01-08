@@ -33,6 +33,7 @@ namespace MediSchedApi.Repository
             return consultation;
         }
 
+
         public async Task<List<Consultation>> GetConsultationByDate(DateTime? date)
         {
             return await _context.Consultations.Where(c => c.Data == date).ToListAsync();
@@ -46,24 +47,6 @@ namespace MediSchedApi.Repository
         public async Task<List<Consultation>> GetConsultationByUser(User user)
         {
             return await _context.Consultations.Where(c => c.Medico == user).ToListAsync();
-        }
-
-        public async Task<List<DoctorSpecialty>> GetDoctorSpecialtyBySymptom(string symptom)
-        {
-            var symptoms = symptom.ToLower().Split(' ');
-
-            var matchedSpecialties = _context.Specialties
-                .Where(s =>
-                    s.Keywords.Any(
-                            k => symptoms.Any(s => k.Contains(s.ToLower()))))
-                .ToList();
-
-            var doctorSpecialty = await _context.DoctorSpecialties
-            .Where(ds => matchedSpecialties.Select(s => s.Id).Contains(ds.SpecialtyId))
-            .Include(ds => ds.User)
-            .ToListAsync();
-
-            return doctorSpecialty;
         }
 
         public async Task NotifierConsultation(string email, string subject, string statusConsultation)
