@@ -136,19 +136,19 @@ namespace MediSchedApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b4f3975-d8dd-4989-aa3e-3e5932cb773e",
+                            Id = "64576a27-a595-4b16-8a50-f256a3e7e93b",
                             Name = "Adm",
                             NormalizedName = "ADM"
                         },
                         new
                         {
-                            Id = "70c7abdf-02dc-4254-a9f7-dc05632d308e",
+                            Id = "da978540-b320-46ed-bd83-8272db7d6496",
                             Name = "Medico",
                             NormalizedName = "MEDICO"
                         },
                         new
                         {
-                            Id = "047a6f5c-5327-4618-a422-3ebd0a91bce9",
+                            Id = "6802035d-c243-4037-a974-927895380ddb",
                             Name = "Paciente",
                             NormalizedName = "PACIENTE"
                         });
@@ -234,6 +234,12 @@ namespace MediSchedApi.Migrations
                             Id = 10,
                             Keywords = new List<string> { "ouvido", "nariz", "garganta", "sinusite", "amigdalite", "cirurgia otorrinolaringológica" },
                             Name = "Otolaringologia"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Keywords = new List<string>(),
+                            Name = "Geral"
                         });
                 });
 

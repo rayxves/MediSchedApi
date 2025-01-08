@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -9,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediSchedApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InicialMigration : Migration
+    public partial class IncialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,26 +30,13 @@ namespace MediSchedApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IdentityRole",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    NormalizedName = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Specialties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Keywords = table.Column<List<string>>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,6 +182,56 @@ namespace MediSchedApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ConsulationReports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MedicoId = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    ConsultationCount = table.Column<int>(type: "integer", nullable: false),
+                    ReportDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsulationReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConsulationReports_AspNetUsers_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Consultations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PacienteId = table.Column<string>(type: "text", nullable: false),
+                    MedicoId = table.Column<string>(type: "text", nullable: false),
+                    Data = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Consultations_AspNetUsers_MedicoId",
+                        column: x => x.MedicoId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Consultations_AspNetUsers_PacienteId",
+                        column: x => x.PacienteId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DoctorSpecialties",
                 columns: table => new
                 {
@@ -220,13 +258,31 @@ namespace MediSchedApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "IdentityRole",
+                table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a74691c5-cbdb-4f1e-8e22-be1a7e4091c7", null, "Paciente", "PACIENTE" },
-                    { "d6ba2c3e-1f0a-432f-914e-89cdbe415d82", null, "Médico", "MEDICO" },
-                    { "ff6d98e7-eab4-481b-98e1-b5d79451731c", null, "Adm", "ADM" }
+                    { "64576a27-a595-4b16-8a50-f256a3e7e93b", null, "Adm", "ADM" },
+                    { "6802035d-c243-4037-a974-927895380ddb", null, "Paciente", "PACIENTE" },
+                    { "da978540-b320-46ed-bd83-8272db7d6496", null, "Medico", "MEDICO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Specialties",
+                columns: new[] { "Id", "Keywords", "Name" },
+                values: new object[,]
+                {
+                    { 1, new List<string> { "pressão alta", "dor no peito", "coração", "infarto", "cardíaco" }, "Cardiologia" },
+                    { 2, new List<string> { "criança", "vacinas", "crescimento", "doenças infantis", "pediátrico" }, "Pediatria" },
+                    { 3, new List<string> { "pele", "acne", "erupções cutâneas", "cabelos", "unhas" }, "Dermatologia" },
+                    { 4, new List<string> { "dor de cabeça", "nervos", "convulsão", "neurológico", "esclerose múltipla" }, "Neurologia" },
+                    { 5, new List<string> { "saúde da mulher", "gestação", "ciclo menstrual", "anticoncepcional", "exames ginecológicos" }, "Ginecologia" },
+                    { 6, new List<string> { "olhos", "vista", "lentes", "miopia", "astigmatismo", "cirurgia ocular" }, "Oftalmologia" },
+                    { 7, new List<string> { "ossos", "fraturas", "coluna", "artrose", "músculos", "cirurgia ortopédica" }, "Ortopedia" },
+                    { 8, new List<string> { "saúde mental", "depressão", "ansiedade", "transtornos mentais", "psicoterapia" }, "Psiquiatria" },
+                    { 9, new List<string> { "idoso", "envelhecimento", "demência", "Alzheimer", "saúde do idoso" }, "Geriatria" },
+                    { 10, new List<string> { "ouvido", "nariz", "garganta", "sinusite", "amigdalite", "cirurgia otorrinolaringológica" }, "Otolaringologia" },
+                    { 11, new List<string>(), "Geral" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -272,6 +328,21 @@ namespace MediSchedApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConsulationReports_MedicoId",
+                table: "ConsulationReports",
+                column: "MedicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Consultations_MedicoId",
+                table: "Consultations",
+                column: "MedicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Consultations_PacienteId",
+                table: "Consultations",
+                column: "PacienteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DoctorSpecialties_SpecialtyId",
                 table: "DoctorSpecialties",
                 column: "SpecialtyId");
@@ -301,10 +372,13 @@ namespace MediSchedApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DoctorSpecialties");
+                name: "ConsulationReports");
 
             migrationBuilder.DropTable(
-                name: "IdentityRole");
+                name: "Consultations");
+
+            migrationBuilder.DropTable(
+                name: "DoctorSpecialties");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -11,5 +11,7 @@ namespace MediSchedApi.Models
         public string Name { get; set; } = string.Empty;
         public List<string> Keywords { get; set; }
         public ICollection<DoctorSpecialty> DoctorSpecialties { get; set; } = new List<DoctorSpecialty>();
+
+        public static int MedicSpecialityId = 11;
     }
 }

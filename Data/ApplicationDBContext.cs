@@ -74,7 +74,7 @@ namespace MediSchedApi.Data
                                 new Specialty { Id = 8, Name = "Psiquiatria", Keywords = new List<string> { "saúde mental", "depressão", "ansiedade", "transtornos mentais", "psicoterapia" } },
                                 new Specialty { Id = 9, Name = "Geriatria", Keywords = new List<string> { "idoso", "envelhecimento", "demência", "Alzheimer", "saúde do idoso" } },
                                 new Specialty { Id = 10, Name = "Otolaringologia", Keywords = new List<string> { "ouvido", "nariz", "garganta", "sinusite", "amigdalite", "cirurgia otorrinolaringológica" } },
-                                new Specialty { Id = 10, Name = "Geral", Keywords = new List<string> { } });
+                                new Specialty { Id = 11, Name = "Geral", Keywords = new List<string> { } });
 
                         modelBuilder.Entity<Role>().HasData(
                             new Role { Name = "Adm", NormalizedName = "ADM" },

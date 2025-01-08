@@ -18,7 +18,8 @@ namespace MediSchedApi.Services
         {
 
             _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(_config["JWT:SigningKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+
         }
 
 
@@ -26,9 +27,10 @@ namespace MediSchedApi.Services
         {
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, "Adm")
+            new Claim("id", user.Id),
+            new Claim("name", user.UserName),
+            new Claim("email", user.Email),
+            new Claim("role", user.Role.Name),
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));

@@ -4,6 +4,6 @@ namespace MediSchedApi.Interfaces
     {
         void AddObserver(IObserver observer);
         void RemoveObserver(IObserver observer);
-        void NotifyObservers(string email, string subject, string statusConsultation);
+        Task NotifyObservers(string email, string subject, string statusConsultation);
     }
 }

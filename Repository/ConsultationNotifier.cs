@@ -11,11 +11,11 @@ namespace MediSchedApi.Repository
             _observers.Add(observer);
         }
 
-        public void NotifyObservers(string email, string subject, string statusConsultation)
+        public async Task NotifyObservers(string email, string subject, string statusConsultation)
         {
             foreach (var observer in _observers)
             {
-                observer.Update(email, subject, statusConsultation);
+                await observer.Update(email, subject, statusConsultation);
             }
         }
 

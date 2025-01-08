@@ -1,4 +1,3 @@
-
 using MediSchedApi.Data;
 using MediSchedApi.Dtos;
 using MediSchedApi.Dtos.User;
@@ -8,13 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
-
-namespace MediSchedApi.Controller
+namespace MediSchedApi.Controllers
 {
     [Route("/user")]
     [ApiController]
-
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -46,19 +44,29 @@ namespace MediSchedApi.Controller
                 return BadRequest("Role não encontrada.");
             }
 
+
             var user = new User
             {
                 UserName = registerDto.UserName,
                 Email = registerDto.Email,
                 Role = role
             };
-
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
 
+            if (role.Name == "Medico")
+            {
+                var doctorSpecialty = new DoctorSpecialty
+                {
+                    UserId = user.Id,
+                    SpecialtyId = Specialty.MedicSpecialityId
+                };
+                _context.DoctorSpecialties.Add(doctorSpecialty);
+                await _context.SaveChangesAsync();
+            }
 
             await _userManager.AddToRoleAsync(user, registerDto.Role);
 
@@ -98,15 +106,6 @@ namespace MediSchedApi.Controller
                 return Unauthorized("Role not found for this user!");
             }
 
-            if (role.Name == "Medico")
-            {
-                var doctorSpecialty = new DoctorSpecialty{
-                    UserId = user.Id,
-                    SpecialtyId = 10
-                };
-                _context.DoctorSpecialties.Add(doctorSpecialty);
-                await _context.SaveChangesAsync();
-            }
             return Ok(new NewUserDto
             {
                 UserName = user.UserName,
@@ -120,8 +119,6 @@ namespace MediSchedApi.Controller
         [HttpDelete("{name}")]
         public async Task<IActionResult> DeleteUser(string name)
         {
-
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -183,6 +180,5 @@ namespace MediSchedApi.Controller
 
             return Ok(userDtos);
         }
-
     }
 }
