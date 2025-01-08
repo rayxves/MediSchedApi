@@ -13,7 +13,7 @@ namespace MediSchedApi.Models
 
         public virtual User Paciente { get; set; }
         public virtual User Medico { get; set; }
-        
+
         public DateTime Data { get; set; }
         public string Status { get; set; }
 

@@ -33,6 +33,13 @@ namespace MediSchedApi.Repository
             return consultation;
         }
 
+        public async Task<List<Consultation>> GetAllConsultations()
+        {
+            return await _context.Consultations
+            .Include(c => c.Medico)
+            .Include(c => c.Paciente)
+            .ToListAsync();
+        }
 
         public async Task<List<Consultation>> GetConsultationByDate(DateTime? date)
         {
@@ -44,19 +51,55 @@ namespace MediSchedApi.Repository
             return await _context.Consultations.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<List<Consultation>> GetConsultationByUser(User user)
-        {
-            return await _context.Consultations.Where(c => c.Medico == user).ToListAsync();
-        }
 
-        public async Task NotifierConsultation(string email, string subject, string statusConsultation)
+
+        public async Task NotifierConsultation(string userName, string doctorName, string email, DateTime consultationDate)
         {
+            var emailBody = _emailService.GenerateEmailHtml(userName, doctorName, consultationDate);
             var newObserver = new Observer(_emailService);
             var consultationNotfier = new ConsultationNotifier();
 
+            var subject = "Nova consulta.";
+
             consultationNotfier.AddObserver(newObserver);
-            await consultationNotfier.NotifyObservers(email, subject, statusConsultation);
+            await consultationNotfier.NotifyObservers(email, subject, emailBody);
 
         }
+
+        public Task<List<Consultation>> GetConsultationByUser(User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), "Usuário não pode ser nulo.");
+            }
+
+            if (user.Role == null)
+            {
+                throw new InvalidOperationException("O usuário não possui um papel associado.");
+            }
+
+            if (string.IsNullOrEmpty(user.Role.Name))
+            {
+                throw new InvalidOperationException("O nome do papel do usuário não é válido.");
+            }
+
+            if (user.Role.Name == "Paciente")
+            {
+                return _context.Consultations
+                    .Where(c => c.Paciente != null && c.Paciente == user)
+                    .ToListAsync();
+            }
+            else if (user.Role.Name == "Medico")
+            {
+                return _context.Consultations
+                    .Where(c => c.Medico != null && c.Medico == user)
+                    .ToListAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Papel de usuário não reconhecido.");
+            }
+        }
+
     }
 }
