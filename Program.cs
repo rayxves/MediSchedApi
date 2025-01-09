@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -111,6 +112,21 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    var jobKey = new JobKey("UpdateConsultationStatusJob");
+    q.AddJob<UpdateConsultationStatusJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+            .ForJob(jobKey)
+            .WithIdentity("UpdateConsultationStatusJob-trigger")
+            .StartNow()
+            .WithSimpleSchedule(x => x.WithIntervalInMinutes(120).RepeatForever()));
+});
+
+builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<EmailService>();

@@ -101,5 +101,17 @@ namespace MediSchedApi.Repository
             }
         }
 
+        public async Task<List<Consultation>> GetConsultationsByStatusAndDate(string status, DateTime data)
+        {
+            DateTime utcData = data.Kind == DateTimeKind.Local ? data.ToUniversalTime() : data;
+            return await _context.Consultations.Where(c => c.Status == status && c.Data > utcData).ToListAsync();
+        }
+
+        public async Task UpdateConsultationStatus(Consultation consultation)
+        {
+            var consultationExists = await _context.Consultations.FirstOrDefaultAsync(c => c.Id == consultation.Id);
+            consultationExists.Status = consultation.Status;
+            await _context.SaveChangesAsync();
+        }
     }
 }

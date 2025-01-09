@@ -11,5 +11,7 @@ namespace MediSchedApi.Interfaces
         Task<Consultation> AddToConsulationAsync(Consultation consultation);
         Task NotifierConsultation(string userName, string doctorName, string email, DateTime consultationDate);
         Task<Consultation> DeleteConsultationAsync(Consultation consultation);
+        Task<List<Consultation>> GetConsultationsByStatusAndDate(string status, DateTime data);
+        Task UpdateConsultationStatus(Consultation consultation);
     }
 }

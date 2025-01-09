@@ -10,6 +10,7 @@ namespace MediSchedApi.Interfaces
         Task<List<ConsultationReport>> GetAllConsultationReportBySpeciality(string speciality);
         Task<ConsultationReport> AddToConsultationReportAsync(ConsultationReport consultationReport);
         Task<ConsultationReport> DeleteConsultationReportAsync(ConsultationReport consultationReport);
+    
 
     }
 }
