@@ -30,6 +30,8 @@ namespace MediSchedApi.Repository
         {
             return await _context.ConsultationReports
             .Include(c => c.Medico)
+            .Include(c => c.DoctorSpecialty)
+            .ThenInclude(ds => ds.Speciality)
             .ToListAsync();
         }
 
@@ -48,6 +50,11 @@ namespace MediSchedApi.Repository
                 .Include(cs => cs.DoctorSpecialty)
                 .ThenInclude(ds => ds.Speciality)
                 .ToListAsync();
+        }
+
+        public async Task<ConsultationReport> GetConsultationReportById(int id)
+        {
+            return await _context.ConsultationReports.FirstOrDefaultAsync(cr => cr.Id == id);
         }
     }
 }

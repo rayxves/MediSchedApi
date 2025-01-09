@@ -79,6 +79,7 @@ namespace MediSchedApi.Controllers
 
         }
 
+        [Authorize(Roles = "Adm")]
         [HttpGet("{speciality}")]
         public async Task<IActionResult> GetConsultationReportBySpeciality(string speciality)
         {
@@ -117,7 +118,35 @@ namespace MediSchedApi.Controllers
             };
 
             return Ok(newConsultationReport);
+        }
 
+        [Authorize(Roles = "Adm")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllConsultationReports()
+        {
+            var consulationReports = await _consultationReportRepo.GetAllConsultationReport();
+            if (consulationReports == null)
+            {
+                return NotFound("Nenhum relatório de consulta foi encontrado");
+            }
+
+            var consulationReportsDto = consulationReports.Select(cr => cr.ToConsultationReportDto()).ToList();
+            return Ok(consulationReportsDto);
+        }
+
+        [Authorize(Roles = "Adm")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteConsultationReport(int id)
+        {
+
+            var consultationReport = await _consultationReportRepo.GetConsultationReportById(id);
+            if (consultationReport == null)
+            {
+                return NotFound("Relatório de consulta não existe.");
+            }
+
+            await _consultationReportRepo.DeleteConsultationReportAsync(consultationReport);
+            return NoContent();
         }
 
     }

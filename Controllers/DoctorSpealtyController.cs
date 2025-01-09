@@ -4,6 +4,7 @@ using MediSchedApi.Data;
 using MediSchedApi.Dtos.DoctorSpecilityDto;
 using MediSchedApi.Interfaces;
 using MediSchedApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace MediSchedApi.Controllers
             _doctorSpeciality = doctorSpeciality;
         }
 
+        [Authorize(Roles = "Adm")]
         [HttpPost("associate")]
         public async Task<IActionResult> AssociateDoctorToSpecialty(string user_name, string specialty_name)
         {
