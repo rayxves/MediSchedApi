@@ -62,7 +62,7 @@ namespace MediSchedApi.Controllers
         }
 
         [Authorize(Roles = "Paciente")]
-        [HttpPost("add")]
+        [HttpPost("schedule")]
         public async Task<IActionResult> AddConsulation(string symptoms, string consultationDate)
         {
             if (!ModelState.IsValid)
@@ -75,19 +75,20 @@ namespace MediSchedApi.Controllers
                 return BadRequest("Sintomas não fornecidos.");
             }
 
+
             if (!DateTime.TryParseExact(consultationDate, "dd-MM-yyyy HH:mm",
                 System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.None, out DateTime consulationDate))
+                System.Globalization.DateTimeStyles.None, out DateTime consultationDateUtc))
             {
                 return BadRequest("Data da consulta não fornecida ou inválida. Use o formato dd-MM-yyyy HH:mm. Exemplo: '01-08-2025 18:00'.");
             }
 
-            if (consulationDate.Kind != DateTimeKind.Utc)
+            if (consultationDateUtc.Kind != DateTimeKind.Utc)
             {
-                consulationDate = DateTime.SpecifyKind(consulationDate, DateTimeKind.Utc);
+                consultationDateUtc = DateTime.SpecifyKind(consultationDateUtc, DateTimeKind.Utc);
             }
 
-            if (consulationDate < DateTime.UtcNow)
+            if (consultationDateUtc < DateTime.UtcNow)
             {
                 return BadRequest("Não é possível agendar uma consulta para uma data passada.");
             }
@@ -100,7 +101,7 @@ namespace MediSchedApi.Controllers
 
             }
 
-            var consulationAtThisTime = await _consultationRepo.GetConsultationByDate(consulationDate);
+            var consulationAtThisTime = await _consultationRepo.GetConsultationByDate(consultationDateUtc);
 
             foreach (var doctor in doctorsSpecialty)
             {
@@ -123,7 +124,7 @@ namespace MediSchedApi.Controllers
                         return BadRequest("Email do médico não encontrado.");
                     }
 
-                    var consulationDateUtc = consulationDate.ToUniversalTime();
+                    var consulationDateUtc = consultationDateUtc.ToUniversalTime();
 
                     var consulation = new Consultation
                     {
@@ -143,7 +144,7 @@ namespace MediSchedApi.Controllers
             return NotFound("Nenhum médico disponível na data e hora especificadas.");
         }
 
-        [HttpDelete]
+        [HttpDelete("cancel")]
         public async Task<ActionResult> DeleteConsultation(int consultationId)
         {
             if (!ModelState.IsValid)

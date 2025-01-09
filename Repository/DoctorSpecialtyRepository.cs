@@ -16,7 +16,7 @@ namespace MediSchedApi.Repository
         public async Task<List<DoctorSpecialty>> GetAllDoctorSpecialtyGeral()
         {
             var specialty = await _context.Specialties.Where(x => x.Id == Specialty.MedicSpecialityId).FirstOrDefaultAsync();
-            var doctorSpecialty = await _context.DoctorSpecialties.Where(ds => ds.SpecialityId == specialty.Id).Include(ds => ds.User).ToListAsync();
+            var doctorSpecialty = await _context.DoctorSpecialties.Where(ds => ds.SpecialityId == specialty.Id).Include(ds => ds.User).ThenInclude(u => u.Role).ToListAsync();
 
             return doctorSpecialty;
         }
@@ -35,6 +35,7 @@ namespace MediSchedApi.Repository
             var doctorSpecialty = await _context.DoctorSpecialties
             .Where(ds => matchedSpecialties.Select(s => s.Id).Contains(ds.SpecialityId))
             .Include(ds => ds.User)
+            .ThenInclude(u => u.Role)
             .ToListAsync();
 
             return doctorSpecialty;
