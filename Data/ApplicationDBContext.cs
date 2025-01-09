@@ -16,7 +16,7 @@ namespace MediSchedApi.Data
                 public DbSet<Specialty> Specialties { get; set; }
                 public DbSet<DoctorSpecialty> DoctorSpecialties { get; set; }
                 public DbSet<Consultation> Consultations { get; set; }
-                public DbSet<ConsulationReport> ConsulationReports { get; set; }
+                public DbSet<ConsultationReport> ConsultationReports { get; set; }
 
                 protected override void OnModelCreating(ModelBuilder modelBuilder)
                 {
@@ -36,9 +36,9 @@ namespace MediSchedApi.Data
                                 .HasForeignKey(ds => ds.UserId);
 
                         modelBuilder.Entity<DoctorSpecialty>()
-                                .HasOne(ds => ds.Specialty)
+                                .HasOne(ds => ds.Speciality)
                                 .WithMany(s => s.DoctorSpecialties)
-                                .HasForeignKey(ds => ds.SpecialtyId);
+                                .HasForeignKey(ds => ds.SpecialityId);
 
                         modelBuilder.Entity<Consultation>()
                                 .HasOne(c => c.Medico)
@@ -52,7 +52,7 @@ namespace MediSchedApi.Data
                                 .HasForeignKey(c => c.PacienteId)
                                 .OnDelete(DeleteBehavior.Restrict);
 
-                        modelBuilder.Entity<ConsulationReport>()
+                        modelBuilder.Entity<ConsultationReport>()
                                 .HasOne(c => c.Medico)
                                 .WithMany()
                                 .HasForeignKey(c => c.MedicoId)

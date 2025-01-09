@@ -7,7 +7,6 @@ namespace MediSchedApi.Dtos.Consultation
     {
         public int Id { get; set; }
 
-
         [JsonProperty("data")]
         public DateTime Data { get; set; }
         public string Status { get; set; }

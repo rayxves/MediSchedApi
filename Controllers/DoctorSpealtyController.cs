@@ -1,6 +1,8 @@
 
 
 using MediSchedApi.Data;
+using MediSchedApi.Dtos.DoctorSpecilityDto;
+using MediSchedApi.Interfaces;
 using MediSchedApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +16,12 @@ namespace MediSchedApi.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDBContext _context;
-        public DoctorSpealtyController(UserManager<User> userManager, ApplicationDBContext context)
+        private readonly IDoctorSpeciality _doctorSpeciality;
+        public DoctorSpealtyController(UserManager<User> userManager, ApplicationDBContext context, IDoctorSpeciality doctorSpeciality)
         {
             _context = context;
             _userManager = userManager;
+            _doctorSpeciality = doctorSpeciality;
         }
 
         [HttpPost("associate")]
@@ -42,30 +46,40 @@ namespace MediSchedApi.Controllers
             {
                 return BadRequest("Usuário não encontrado.");
             }
-            var specialty = await _context.Specialties.FirstOrDefaultAsync(s => s.Name == specialty_name);
+            var specialty = await _context.Specialties.FirstOrDefaultAsync(s => s.Name.ToLower() == specialty_name.ToLower());
             if (specialty == null)
             {
                 return NotFound("Especialidade não encontrada.");
             }
 
             var existingAssociation = await _context.DoctorSpecialties
-           .FirstOrDefaultAsync(ds => ds.UserId == user.Id && ds.SpecialtyId == specialty.Id);
+           .FirstOrDefaultAsync(ds => ds.UserId == user.Id);
 
-            if (existingAssociation != null)
+
+            if (existingAssociation != null &&
+                existingAssociation.Speciality != null &&
+                existingAssociation.Speciality.Name.ToLower() == specialty_name.ToLower())
             {
                 return BadRequest("O Médico já está associado a essa especialidade.");
             }
 
             var doctorSpecialty = new DoctorSpecialty
             {
+                Id = existingAssociation.Id,
                 UserId = user.Id,
-                SpecialtyId = specialty.Id
+                User = user,
+                SpecialityId = specialty.Id,
+                Speciality = specialty,
             };
 
-            _context.DoctorSpecialties.Add(doctorSpecialty);
-            await _context.SaveChangesAsync();
+            var newDoctorSpecility = await _doctorSpeciality.UpdateSpecialityAsync(doctorSpecialty.Id, doctorSpecialty);
+            var doctorSpecialityDto = new DoctorSpecialityDto
+            {
+                UserName = newDoctorSpecility.User.UserName,
+                SpecialityName = newDoctorSpecility.Speciality.Name
+            };
 
-            return Ok("Associação realizada com sucesso.");
+            return Ok(doctorSpecialityDto);
         }
 
     }

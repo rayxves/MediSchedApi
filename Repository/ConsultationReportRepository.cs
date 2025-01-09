@@ -12,30 +12,42 @@ namespace MediSchedApi.Repository
         {
             _context = context;
         }
-        public async Task<ConsulationReport> AddToConsulationReportAsync(ConsulationReport consultationReport)
+        public async Task<ConsultationReport> AddToConsultationReportAsync(ConsultationReport consultationReport)
         {
-            await _context.ConsulationReports.AddAsync(consultationReport);
+            await _context.ConsultationReports.AddAsync(consultationReport);
             await _context.SaveChangesAsync();
             return consultationReport;
         }
 
-        public async Task<ConsulationReport> DeleteConsultationReportAsync(ConsulationReport consultationReport)
+        public async Task<ConsultationReport> DeleteConsultationReportAsync(ConsultationReport consultationReport)
         {
-            _context.ConsulationReports.Remove(consultationReport);
+            _context.ConsultationReports.Remove(consultationReport);
             await _context.SaveChangesAsync();
             return consultationReport;
         }
 
-        public async Task<List<ConsulationReport>> GetAllConsultationReport()
+        public async Task<List<ConsultationReport>> GetAllConsultationReport()
         {
-            return await _context.ConsulationReports
+            return await _context.ConsultationReports
             .Include(c => c.Medico)
             .ToListAsync();
         }
 
-        public async Task<List<ConsulationReport>> GetAllConsultationReportByDoctor(User user)
+        public async Task<List<ConsultationReport>> GetAllConsultationReportByDoctor(User user)
         {
-            return await _context.ConsulationReports.Where(c => c.Medico == user).ToListAsync();   
+            return await _context.ConsultationReports
+            .Where(c => c.MedicoId == user.Id)
+            .ToListAsync();
+        }
+
+        public async Task<List<ConsultationReport>> GetAllConsultationReportBySpeciality(string speciality)
+        {
+            return await _context.ConsultationReports
+            .Where(cs => cs.DoctorSpecialty.Speciality.Name.ToLower() == speciality.ToLower())
+                .Include(cs => cs.Medico)
+                .Include(cs => cs.DoctorSpecialty)
+                .ThenInclude(ds => ds.Speciality)
+                .ToListAsync();
         }
     }
 }

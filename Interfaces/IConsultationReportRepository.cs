@@ -4,10 +4,11 @@ namespace MediSchedApi.Interfaces
 {
     public interface IConsultationReportRepository
     {
-        Task<List<ConsulationReport>> GetAllConsultationReport();
-        Task<List<ConsulationReport>> GetAllConsultationReportByDoctor(User user);
-        Task<ConsulationReport> AddToConsulationReportAsync(ConsulationReport consultationReport);
-        Task<ConsulationReport> DeleteConsultationReportAsync(ConsulationReport consultationReport);
+        Task<List<ConsultationReport>> GetAllConsultationReport();
+        Task<List<ConsultationReport>> GetAllConsultationReportByDoctor(User user);
+        Task<List<ConsultationReport>> GetAllConsultationReportBySpeciality(string speciality);
+        Task<ConsultationReport> AddToConsultationReportAsync(ConsultationReport consultationReport);
+        Task<ConsultationReport> DeleteConsultationReportAsync(ConsultationReport consultationReport);
 
     }
 }

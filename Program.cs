@@ -119,6 +119,7 @@ builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
 builder.Services.AddScoped<IObserver, Observer>();
 builder.Services.AddScoped<ISubject, ConsultationNotifier>();
 builder.Services.AddScoped<IDoctorSpeciality, DoctorSpecialtyRepository>();
+builder.Services.AddScoped<IConsultationReportRepository, ConsultationReportRepository>();
 
 var app = builder.Build();
 

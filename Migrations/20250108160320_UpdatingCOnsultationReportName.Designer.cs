@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MediSchedApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediSchedApi.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250108160320_UpdatingCOnsultationReportName")]
+    partial class UpdatingCOnsultationReportName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,7 +96,7 @@ namespace MediSchedApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("SpecialityId")
+                    b.Property<int>("SpecialtyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("UserId")
@@ -102,7 +105,7 @@ namespace MediSchedApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SpecialityId");
+                    b.HasIndex("SpecialtyId");
 
                     b.HasIndex("UserId");
 
@@ -137,19 +140,19 @@ namespace MediSchedApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e9465ae7-3750-4d2b-a860-33a889c7640c",
+                            Id = "1e47ee85-e05b-4620-8fc2-9778f4225a28",
                             Name = "Adm",
                             NormalizedName = "ADM"
                         },
                         new
                         {
-                            Id = "4d456802-edab-4a3b-8b26-c4e6a4f78cee",
+                            Id = "f5cf898a-a5aa-4dd6-bc9c-72057738643f",
                             Name = "Medico",
                             NormalizedName = "MEDICO"
                         },
                         new
                         {
-                            Id = "c840853c-c690-4488-9b8a-9c46c29ad71e",
+                            Id = "e8d1b853-d5b5-45e7-a484-ddcb0e063ff5",
                             Name = "Paciente",
                             NormalizedName = "PACIENTE"
                         });
@@ -460,9 +463,9 @@ namespace MediSchedApi.Migrations
 
             modelBuilder.Entity("MediSchedApi.Models.DoctorSpecialty", b =>
                 {
-                    b.HasOne("MediSchedApi.Models.Specialty", "Speciality")
+                    b.HasOne("MediSchedApi.Models.Specialty", "Specialty")
                         .WithMany("DoctorSpecialties")
-                        .HasForeignKey("SpecialityId")
+                        .HasForeignKey("SpecialtyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -472,7 +475,7 @@ namespace MediSchedApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Speciality");
+                    b.Navigation("Specialty");
 
                     b.Navigation("User");
                 });

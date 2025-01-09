@@ -12,7 +12,7 @@ namespace MediSchedApi.Models
         public string UserId { get; set; }
         public User User { get; set; } = null!;
 
-        public int SpecialtyId { get; set; }
-        public Specialty Specialty { get; set; } = null!;
+        public int SpecialityId { get; set; }
+        public Specialty Speciality { get; set; } = null!;
     }
 }

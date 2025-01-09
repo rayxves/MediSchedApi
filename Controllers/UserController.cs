@@ -62,7 +62,7 @@ namespace MediSchedApi.Controllers
                 var doctorSpecialty = new DoctorSpecialty
                 {
                     UserId = user.Id,
-                    SpecialtyId = Specialty.MedicSpecialityId
+                    SpecialityId = Specialty.MedicSpecialityId
                 };
                 _context.DoctorSpecialties.Add(doctorSpecialty);
                 await _context.SaveChangesAsync();

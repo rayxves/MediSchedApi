@@ -16,7 +16,7 @@ namespace MediSchedApi.Repository
         public async Task<List<DoctorSpecialty>> GetAllDoctorSpecialtyGeral()
         {
             var specialty = await _context.Specialties.Where(x => x.Id == Specialty.MedicSpecialityId).FirstOrDefaultAsync();
-            var doctorSpecialty = await _context.DoctorSpecialties.Where(ds => ds.SpecialtyId == specialty.Id).Include(ds => ds.User).ToListAsync();
+            var doctorSpecialty = await _context.DoctorSpecialties.Where(ds => ds.SpecialityId == specialty.Id).Include(ds => ds.User).ToListAsync();
 
             return doctorSpecialty;
         }
@@ -33,12 +33,30 @@ namespace MediSchedApi.Repository
                 .ToList();
 
             var doctorSpecialty = await _context.DoctorSpecialties
-            .Where(ds => matchedSpecialties.Select(s => s.Id).Contains(ds.SpecialtyId))
+            .Where(ds => matchedSpecialties.Select(s => s.Id).Contains(ds.SpecialityId))
             .Include(ds => ds.User)
             .ToListAsync();
 
             return doctorSpecialty;
         }
 
+        public async Task<DoctorSpecialty> GetDoctorSpecialtyByUserId(string userId)
+        {
+            return await _context.DoctorSpecialties
+            .Include(ds => ds.Speciality)
+            .FirstOrDefaultAsync(ds => ds.UserId == userId);
+        }
+
+        public async Task<DoctorSpecialty> UpdateSpecialityAsync(int id, DoctorSpecialty doctorSpecialty)
+        {
+            var existsDoctorSpeciality = await _context.DoctorSpecialties.FirstOrDefaultAsync(ds => ds.Id == id);
+
+            existsDoctorSpeciality.SpecialityId = doctorSpecialty.SpecialityId;
+            existsDoctorSpeciality.Speciality = doctorSpecialty.Speciality;
+
+            await _context.SaveChangesAsync();
+            return existsDoctorSpeciality;
+
+        }
     }
 }
