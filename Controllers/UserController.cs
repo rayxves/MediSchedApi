@@ -171,11 +171,11 @@ namespace MediSchedApi.Controllers
                 return NotFound("Usuários não encontrados.");
             }
 
-            var userDtos = users.Select(user => new NewUserDto
+            var userDtos = users.Select(user => new NewUserByRoleDto
             {
                 UserName = user?.UserName,
                 Email = user?.Email,
-                Role = role,
+
             }).ToList();
 
             return Ok(userDtos);
