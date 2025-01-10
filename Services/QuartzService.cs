@@ -12,13 +12,14 @@ namespace MediSchedApi.Services
         }
         public async Task Execute(IJobExecutionContext context)
         {
+            Console.WriteLine("Atualizando status das consultas...");
             var currentDate = DateTime.Now;
 
-            var consultationsToUpdate = await _consultationRepo.GetConsultationsByStatusAndDate("agendada", currentDate);
+            var consultationsToUpdate = await _consultationRepo.GetConsultationsByStatusAndDate("Agendada", currentDate);
 
             foreach (var consultation in consultationsToUpdate)
             {
-                consultation.Status = "finalizada";
+                consultation.Status = "Finalizada";
 
                 await _consultationRepo.UpdateConsultationStatus(consultation);
             }

@@ -123,7 +123,7 @@ builder.Services.AddQuartz(q =>
             .ForJob(jobKey)
             .WithIdentity("UpdateConsultationStatusJob-trigger")
             .StartNow()
-            .WithSimpleSchedule(x => x.WithIntervalInMinutes(120).RepeatForever()));
+            .WithSimpleSchedule(x => x.WithIntervalInMinutes(1).RepeatForever()));
 });
 
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
