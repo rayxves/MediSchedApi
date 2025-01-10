@@ -73,3 +73,28 @@ Para parar o container:
 ```bash
 docker-compose down
 ```
+#### :gear: Rodando a Aplicação com .NET
+<p>Após configurar o appsettings.json e inicializar o container PostgreSQL:</p>
+
+<p>Restaure as dependências do projeto:</p>
+
+```bash
+dotnet restore
+```
+Compile o projeto para verificar se não há erros:
+
+```bash
+
+dotnet build
+```
+Aplique as migrações para criar o banco de dados:
+
+```bash
+dotnet ef database update
+```
+Inicie a aplicação:
+
+```bash
+
+dotnet run
+```
