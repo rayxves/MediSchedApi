@@ -52,8 +52,7 @@ No seu arquivo `appsettings.json`, você precisa preencher as configurações pa
 
 #### :whale: Inicializando o Container PostgreSQL com Docker
 
-O arquivo docker-compose configura um container para rodar o PostgreSQL com as variáveis de ambiente necessárias
-Passos para inicializar o container:
+<p>O arquivo docker-compose configura um container para rodar o PostgreSQL com as variáveis de ambiente necessárias. Passos para iniciar o container: </p>
 
 <p>Navegue até o diretório onde o arquivo docker-compose.yml está localizado.</p>
 
