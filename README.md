@@ -89,6 +89,10 @@ dotnet build
 Aplique as migrações para criar o banco de dados:
 
 ```bash
+dotnet ef migrations add InitialCreate
+```
+
+```bash
 dotnet ef database update
 ```
 Inicie a aplicação:
